@@ -22,7 +22,7 @@ uniform mediump mat4	myViewModelMatrix;
 // P * V * M - Projection space
 uniform mediump mat4	myProjectionViewModelMatrix;
 
-varying lowp	vec4 v_rgba;
+//varying lowp	vec4 v_rgba;
 varying	mediump vec2 v_st;
 
 void main() {
@@ -32,5 +32,5 @@ void main() {
 	vec4 worldSpaceVertex = myModelMatrix * myVertexXYZ;
 
 	v_st	= myVertexST;
-	v_rgba	= myVertexRGBA;
+	//v_rgba	= myVertexRGBA;
 }
