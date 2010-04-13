@@ -10,7 +10,6 @@
 #import "TEIRendererHelper.h"
 #import "ConstantsAndMacros.h"
 #import "JLMMatrixLibrary.h"
-#import "GLErrorCheckAble.h"
 
 // uniform index
 enum {
@@ -67,7 +66,7 @@ enum {
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_DEPTH_TEST);
 		glFrontFace(GL_CCW);	
-		glEnable (GL_BLEND);
+		glEnable (GL_REPLACE);
 		
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
@@ -77,12 +76,6 @@ enum {
 
 - (void)render
 {			
-	glActiveTexture( GL_TEXTURE0 );
-	GLuint texture = [self->storage textureIDForTileAtX:1 andY:1];
-	glBindTexture(GL_TEXTURE_2D, texture);
-	GLuint location = glGetUniformLocation(program, "myTexture_0");
-	glUniform1i(location, 0);
-	
     // Replace the implementation of this method to do your own custom drawing	
     static const GLfloat verticesST[] = {
 		
@@ -134,6 +127,12 @@ enum {
 	
     // Use shader program
     glUseProgram(program);
+	glActiveTexture( GL_TEXTURE0 );
+	GLuint texture = [self->storage textureIDForTileAtX:0 andY:0];
+	glBindTexture(GL_TEXTURE_2D, texture);
+	GLuint location = glGetUniformLocation(program, "myTexture_0");
+	glUniform1i(location, 0);
+	
 	// M - World space
 	[self.rendererHelper setModelTransform:xform];
 	glUniformMatrix4fv(uniforms[ModelMatrixUniformHandle], 1, NO, (GLfloat *)[self.rendererHelper modelTransform]);

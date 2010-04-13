@@ -27,10 +27,9 @@ varying	mediump vec2 v_st;
 
 void main() {
 
-	gl_Position = myProjectionViewModelMatrix * myVertexXYZ;
+	gl_Position = myVertexXYZ;//myProjectionViewModelMatrix * myVertexXYZ;
 
-	vec4 worldSpaceVertex = myModelMatrix * myVertexXYZ;
-
+	//vec4 worldSpaceVertex = myModelMatrix * myVertexXYZ;
 	v_st	= myVertexST;
 	//v_rgba	= myVertexRGBA;
 }
