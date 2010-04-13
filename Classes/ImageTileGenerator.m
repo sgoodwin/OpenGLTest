@@ -244,12 +244,11 @@ static uint8_t *GetImageData(CGImageRef image, TextureFormat format) {
 		NSLog(@"split image into %d pieces.", [splits count]);
 			  
 		GLuint** array = (GLuint**)malloc(arrayWidth * sizeof(GLuint*));
-		for (GLuint i = 0; i < arrayWidth; ++i)
-		{
+		for (GLuint i = 0;i < arrayWidth;i++){
 			array[i] = (GLuint*)malloc(arrayHeight * sizeof(GLuint));
-			for(GLuint j=0;j<arrayHeight;j++){
+			for(GLuint j=arrayHeight-1;j>0;j--){
 				GLuint index = (i*(arrayWidth-1))+j;
-				NSLog(@"Using index: %i", index);
+				NSLog(@"(%i, %i) => %i", i, j, index);
 				UIImage *imageToTexture = [splits objectAtIndex:index];
 				if(!!imageToTexture)
 					array[i][j] = [ImageTileGenerator textureFromImage:imageToTexture];
