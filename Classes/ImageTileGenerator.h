@@ -25,4 +25,6 @@
 
 + (GLuint)textureFromImage:(UIImage*)image;
 + (NSArray*)splitImageIntoRects:(CGImageRef)anImage with:(GLuint)slicesInX and:(GLuint)slicedInY;
+
++ (void)errorCheck;
 @end

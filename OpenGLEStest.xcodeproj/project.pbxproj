@@ -18,6 +18,9 @@
 		28FD14FE0DC6FC130079059D /* EAGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 28FD14FD0DC6FC130079059D /* EAGLView.m */; };
 		28FD15000DC6FC520079059D /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD14FF0DC6FC520079059D /* OpenGLES.framework */; };
 		28FD15080DC6FC5B0079059D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD15070DC6FC5B0079059D /* QuartzCore.framework */; };
+		9B1274431174F1E40000381C /* TEIRendererHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B1274421174F1E40000381C /* TEIRendererHelper.m */; };
+		9B1274571174F23C0000381C /* VectorMatrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9B1274541174F23C0000381C /* VectorMatrix.cpp */; };
+		9B1274581174F23C0000381C /* JLMMatrixLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9B1274561174F23C0000381C /* JLMMatrixLibrary.cpp */; };
 		9B5C562C1173971A001849F1 /* ImageTileGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B5C562B1173971A001849F1 /* ImageTileGenerator.m */; };
 		9B5C56A411739E08001849F1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B5C56A311739E08001849F1 /* CoreGraphics.framework */; };
 		9B5C56CE1173A05A001849F1 /* 1280x800.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9B5C56CD1173A05A001849F1 /* 1280x800.jpg */; };
@@ -42,6 +45,13 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* OpenGLEStest_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLEStest_Prefix.pch; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* OpenGLEStest-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "OpenGLEStest-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		9B1274411174F1E40000381C /* TEIRendererHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TEIRendererHelper.h; sourceTree = "<group>"; };
+		9B1274421174F1E40000381C /* TEIRendererHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TEIRendererHelper.m; sourceTree = "<group>"; };
+		9B1274521174F23C0000381C /* ConstantsAndMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConstantsAndMacros.h; sourceTree = "<group>"; };
+		9B1274531174F23C0000381C /* VectorMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VectorMatrix.h; sourceTree = "<group>"; };
+		9B1274541174F23C0000381C /* VectorMatrix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VectorMatrix.cpp; sourceTree = "<group>"; };
+		9B1274551174F23C0000381C /* JLMMatrixLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JLMMatrixLibrary.h; sourceTree = "<group>"; };
+		9B1274561174F23C0000381C /* JLMMatrixLibrary.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JLMMatrixLibrary.cpp; sourceTree = "<group>"; };
 		9B5C562A1173971A001849F1 /* ImageTileGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageTileGenerator.h; sourceTree = "<group>"; };
 		9B5C562B1173971A001849F1 /* ImageTileGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageTileGenerator.m; sourceTree = "<group>"; };
 		9B5C56A311739E08001849F1 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -67,6 +77,9 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				9B1274511174F23C0000381C /* Vectors & Matrices */,
+				9B1274411174F1E40000381C /* TEIRendererHelper.h */,
+				9B1274421174F1E40000381C /* TEIRendererHelper.m */,
 				2514C26F10084DB100A42282 /* ES2Renderer.h */,
 				2514C27010084DB100A42282 /* ES2Renderer.m */,
 				2514C27110084DB100A42282 /* ESRenderer.h */,
@@ -141,6 +154,18 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		9B1274511174F23C0000381C /* Vectors & Matrices */ = {
+			isa = PBXGroup;
+			children = (
+				9B1274521174F23C0000381C /* ConstantsAndMacros.h */,
+				9B1274531174F23C0000381C /* VectorMatrix.h */,
+				9B1274541174F23C0000381C /* VectorMatrix.cpp */,
+				9B1274551174F23C0000381C /* JLMMatrixLibrary.h */,
+				9B1274561174F23C0000381C /* JLMMatrixLibrary.cpp */,
+			);
+			name = "Vectors & Matrices";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -205,6 +230,9 @@
 				28FD14FE0DC6FC130079059D /* EAGLView.m in Sources */,
 				2514C27310084DB100A42282 /* ES2Renderer.m in Sources */,
 				9B5C562C1173971A001849F1 /* ImageTileGenerator.m in Sources */,
+				9B1274431174F1E40000381C /* TEIRendererHelper.m in Sources */,
+				9B1274571174F23C0000381C /* VectorMatrix.cpp in Sources */,
+				9B1274581174F23C0000381C /* JLMMatrixLibrary.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

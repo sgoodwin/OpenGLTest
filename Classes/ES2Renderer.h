@@ -16,10 +16,13 @@
 
 #import "ImageTileGenerator.h"
 
+@class TEIRendererHelper;
+
 @interface ES2Renderer : NSObject <ESRenderer>
 {
 @private
     EAGLContext *context;
+	TEIRendererHelper *_rendererHelper;
 
     // The pixel dimensions of the CAEAGLLayer
     GLint backingWidth;
@@ -37,6 +40,7 @@
 	
 	ImageTileGenerator *storage;
 }
+@property (nonatomic, retain) TEIRendererHelper *rendererHelper;
 
 - (void)render;
 - (BOOL)resizeFromLayer:(CAEAGLLayer *)layer;

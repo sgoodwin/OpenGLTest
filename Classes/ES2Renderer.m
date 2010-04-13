@@ -7,6 +7,10 @@
 //
 
 #import "ES2Renderer.h"
+#import "TEIRendererHelper.h"
+#import "ConstantsAndMacros.h"
+#import "JLMMatrixLibrary.h"
+
 
 // uniform index
 enum {
@@ -36,7 +40,7 @@ enum {
 @end
 
 @implementation ES2Renderer
-
+@synthesize rendererHelper = _rendererHelper;
 
 // Create an OpenGL ES 2.0 context
 - (id)init
@@ -51,12 +55,21 @@ enum {
             return nil;
         }
 
+		_rendererHelper = [[TEIRendererHelper alloc] init];
+		
         // Create default framebuffer object. The backing will be allocated for the current layer in -resizeFromLayer
         glGenFramebuffers(1, &defaultFramebuffer);
         glGenRenderbuffers(1, &colorRenderbuffer);
         glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebuffer);
         glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorRenderbuffer);
+		
+		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_DEPTH_TEST);
+		glFrontFace(GL_CCW);	
+		glEnable (GL_BLEND);
+		
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
     return self;
@@ -64,6 +77,13 @@ enum {
 
 - (void)render
 {			
+	glActiveTexture( GL_TEXTURE0 );
+	GLuint texture = [self->storage textureIDForTileAtX:1 andY:1];
+	glBindTexture(GL_TEXTURE_2D, texture);
+	GLuint location = glGetUniformLocation(program, "myTexture_0");
+	glUniform1i(location, 0);
+
+	
     // Replace the implementation of this method to do your own custom drawing	
     static const GLfloat squareVertices[] = {
 		-0.5f, -0.5f,
@@ -105,8 +125,36 @@ enum {
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	static float angle = 0.0;
+	M3DMatrix44f rotation;
+	JLMMatrix3DSetRotationByDegrees(rotation, angle, 0.0, 0.0, 1.0);
+	//	angle += 2.0;	
+	
+	static float t = 0.0f;
+	M3DMatrix44f translation;
+	JLMMatrix3DSetTranslation(translation, 0.0, 0.0, (2.0) * (0.85) * cosf(t/4.0));
+	t += 0.075f;	
+    
+	M3DMatrix44f xform;
+	JLMMatrix3DMultiply(translation, rotation, xform);
+	
     // Use shader program
     glUseProgram(program);
+	// M - World space
+	[self.rendererHelper setModelTransform:xform];
+	glUniformMatrix4fv(uniforms[ModelMatrixUniformHandle], 1, NO, (GLfloat *)[self.rendererHelper modelTransform]);
+	
+	// The surface normal transform is the inverse of M
+	glUniformMatrix4fv(uniforms[SurfaceNormalMatrixUniformHandle], 1, NO, (GLfloat *)[self.rendererHelper surfaceNormalTransform]);
+	
+	// V * M - Eye space
+	JLMMatrix3DMultiply([self.rendererHelper viewTransform], [self.rendererHelper modelTransform], [self.rendererHelper viewModelTransform]);
+	glUniformMatrix4fv(uniforms[ViewModelMatrixUniformHandle], 1, NO, (GLfloat *)[self.rendererHelper viewModelTransform]);
+	
+	// P * V * M - Projection space
+	JLMMatrix3DMultiply([self.rendererHelper projection], [self.rendererHelper viewModelTransform], [self.rendererHelper projectionViewModelTransform]);
+	glUniformMatrix4fv(uniforms[ProjectionViewModelUniformHandle], 1, NO, (GLfloat *)[self.rendererHelper projectionViewModelTransform]);
+	
 	
 	glVertexAttribPointer(VertexXYZAttributeHandle, 3, GL_FLOAT, 0, 0, squareVertices);
 	glEnableVertexAttribArray(VertexXYZAttributeHandle);
