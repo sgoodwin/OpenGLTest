@@ -26,8 +26,6 @@ GLint uniforms[UniformCount];
 enum {
     VertexXYZAttributeHandle,
     VertexSTAttributeHandle,
-    VertexRGBAAttributeHandle,
-    VertexSurfaceNormalAttributeHandle,
     AttributeCount
 };
 
@@ -74,107 +72,71 @@ enum {
     return self;
 }
 
-- (void)render
-{			
-    // Replace the implementation of this method to do your own custom drawing	
-    static const GLfloat verticesST[] = {
-		
-		0.0f, 0.0f,
-		1.0f, 0.0f,
-		0.0f, 1.0f,
-		1.0f, 1.0f,
-	};
-	
-	static const GLfloat verticesXYZ[] = {
-		-0.5f, -0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f,
-		-0.5f,  0.5f, 0.0f,
-		0.5f,  0.5f, 0.0f,
-	};
-	
-	static const GLubyte verticesRGBA[] = {
-		255, 255,   0, 255,
-		0,   255, 255, 255,
-		0,     0,   0, 255,
-		255,   0, 255, 255,
-	};
-	
-
+- (void)render{			
     // This application only creates a single context which is already set current at this point.
     // This call is redundant, but needed if dealing with multiple contexts.
-    [EAGLContext setCurrentContext:context];
 
     // This application only creates a single default framebuffer which is already bound at this point.
     // This call is redundant, but needed if dealing with multiple framebuffers.
-    glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebuffer);
     glViewport(0, 0, backingWidth, backingHeight);
 
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	static float angle = 0.0;
-	M3DMatrix44f rotation;
-	JLMMatrix3DSetRotationByDegrees(rotation, angle, 0.0, 0.0, 1.0);
-	//	angle += 2.0;	
-	
-	static float t = 0.0f;
-	M3DMatrix44f translation;
-	JLMMatrix3DSetTranslation(translation, 0.0, 0.0, (2.0) * (0.85) * cosf(t/4.0));
-	t += 0.075f;	
-    
-	M3DMatrix44f xform;
-	JLMMatrix3DMultiply(translation, rotation, xform);
-	
     // Use shader program
     glUseProgram(program);
-	glActiveTexture( GL_TEXTURE0 );
-	GLuint texture = [self->storage textureIDForTileAtX:0 andY:0];
-	glBindTexture(GL_TEXTURE_2D, texture);
-	GLuint location = glGetUniformLocation(program, "myTexture_0");
-	glUniform1i(location, 0);
 	
-	// M - World space
-	[self.rendererHelper setModelTransform:xform];
-	glUniformMatrix4fv(uniforms[ModelMatrixUniformHandle], 1, NO, (GLfloat *)[self.rendererHelper modelTransform]);
+	for(GLuint i = 0;i < [self->storage width];i++){
+		for(GLuint j=0;j < [self->storage height];j++){
+			static GLfloat verticesST[] = {
+				0.0f, 0.0f,
+				1.0f, 0.0f,
+				0.0f, 1.0f,
+				1.0f, 1.0f,
+			};
 	
-	// The surface normal transform is the inverse of M
-	glUniformMatrix4fv(uniforms[SurfaceNormalMatrixUniformHandle], 1, NO, (GLfloat *)[self.rendererHelper surfaceNormalTransform]);
+			static GLfloat verticesXYZ[] = {
+				-1.0f, -1.0f, 0.0f,
+				-0.5f, -1.0f, 0.0f,
+				-1.0f,  -0.5f, 0.0f,
+				-0.5f,  -0.5f, 0.0f,
+			};
+			verticesXYZ[0] = -1.0f+(GLfloat)i*0.5f;
+			verticesXYZ[3] = -0.5f+(GLfloat)i*0.5f;
+			verticesXYZ[6] = -1.0f+(GLfloat)i*0.5f;
+			verticesXYZ[9] = -0.5f+(GLfloat)i*0.5f;
+			
+			verticesXYZ[1] = -1.0f+(GLfloat)j*0.5f;
+			verticesXYZ[4] = -1.0f+(GLfloat)j*0.5f;
+			verticesXYZ[7] = -0.5f+(GLfloat)j*0.5f;
+			verticesXYZ[10] = -0.5f+(GLfloat)j*0.5f;
 	
-	// V * M - Eye space
-	JLMMatrix3DMultiply([self.rendererHelper viewTransform], [self.rendererHelper modelTransform], [self.rendererHelper viewModelTransform]);
-	glUniformMatrix4fv(uniforms[ViewModelMatrixUniformHandle], 1, NO, (GLfloat *)[self.rendererHelper viewModelTransform]);
+			glActiveTexture( GL_TEXTURE0 );
+			GLuint texture = [self->storage textureIDForTileAtX:i andY:j];
+			glBindTexture(GL_TEXTURE_2D, texture);
+			GLuint location = glGetUniformLocation(program, "myTexture");
+			glUniform1i(location, 0);
 	
-	// P * V * M - Projection space
-	JLMMatrix3DMultiply([self.rendererHelper projection], [self.rendererHelper viewModelTransform], [self.rendererHelper projectionViewModelTransform]);
-	glUniformMatrix4fv(uniforms[ProjectionViewModelUniformHandle], 1, NO, (GLfloat *)[self.rendererHelper projectionViewModelTransform]);
+			glVertexAttribPointer(VertexXYZAttributeHandle, 3, GL_FLOAT, 0, 0, verticesXYZ);
+			glEnableVertexAttribArray(VertexXYZAttributeHandle);
 	
-	
-	glVertexAttribPointer(VertexXYZAttributeHandle, 3, GL_FLOAT, 0, 0, verticesXYZ);
-	glEnableVertexAttribArray(VertexXYZAttributeHandle);
-	
-	glVertexAttribPointer(VertexSTAttributeHandle, 2, GL_FLOAT, 0, 0, verticesST);
-	glEnableVertexAttribArray(VertexSTAttributeHandle);
-	
-	glVertexAttribPointer(VertexRGBAAttributeHandle, 4, GL_UNSIGNED_BYTE, 1, 0, verticesRGBA);
-	glEnableVertexAttribArray(VertexRGBAAttributeHandle);
+			glVertexAttribPointer(VertexSTAttributeHandle, 2, GL_FLOAT, 0, 0, verticesST);
+			glEnableVertexAttribArray(VertexSTAttributeHandle);
+			
+			// Validate program before drawing. This is a good check, but only really necessary in a debug build.
+			// DEBUG macro must be defined in your debug configurations if that's not already the case.
+			#if defined(DEBUG)
+				if (![self validateProgram:program])
+				{
+					NSLog(@"Failed to validate program: %d", program);
+					return;
+				}
+			#endif
 
-	
-	//glUniformMatrix4fv(m_u_mvpHandle, 1, GL_FALSE, (GLfloat*)&mvp.m[0] );
-	
-    // Validate program before drawing. This is a good check, but only really necessary in a debug build.
-    // DEBUG macro must be defined in your debug configurations if that's not already the case.
-#if defined(DEBUG)
-    if (![self validateProgram:program])
-    {
-        NSLog(@"Failed to validate program: %d", program);
-        return;
-    }
-#endif
-
-    // Draw
-	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, triangles);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	
+			// Draw
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		}
+	}
 
     // This application only creates a single color renderbuffer which is already bound at this point.
     // This call is redundant, but needed if dealing with multiple renderbuffers.
@@ -328,7 +290,6 @@ enum {
 
 	glBindAttribLocation(program, VertexXYZAttributeHandle,	"myVertexXYZ");
 	glBindAttribLocation(program, VertexSTAttributeHandle,		"myVertexST");
-    glBindAttribLocation(program, VertexRGBAAttributeHandle,	"myVertexRGBA");
     return TRUE;
 }
 
@@ -340,7 +301,7 @@ enum {
     glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &backingWidth);
     glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &backingHeight);
 	
-	storage = [[ImageTileGenerator alloc] initWithImage:[UIImage imageNamed:@"1280x800.jpg"]];
+	storage = [[ImageTileGenerator alloc] initWithImage:[UIImage imageNamed:@"danny.jpg"]];
 	
 	
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)

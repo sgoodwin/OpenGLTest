@@ -239,17 +239,20 @@ static uint8_t *GetImageData(CGImageRef image, TextureFormat format) {
 		arrayWidth = ceil(aWidth/512.0f);
 		arrayHeight = ceil(aHeight/512.0f);
 		NSLog(@"Alive! (%.2f,%.2f) => (%i,%i)", aWidth, aHeight, arrayWidth, arrayHeight);
+		
 		NSArray *splits = [ImageTileGenerator splitImageIntoRects:image.CGImage with:arrayWidth and:arrayHeight];
 		NSLog(@"split image into %d pieces.", [splits count]);
 			  
 		GLuint** array = (GLuint**)malloc(arrayWidth * sizeof(GLuint*));
-		
-		GLuint i = 0;
-		for (i = 0; i < arrayWidth; ++i)
+		for (GLuint i = 0; i < arrayWidth; ++i)
 		{
 			array[i] = (GLuint*)malloc(arrayHeight * sizeof(GLuint));
 			for(GLuint j=0;j<arrayHeight;j++){
-				array[i][j] = [ImageTileGenerator textureFromImage:[splits objectAtIndex:i]];
+				GLuint index = (i*(arrayWidth-1))+j;
+				NSLog(@"Using index: %i", index);
+				UIImage *imageToTexture = [splits objectAtIndex:index];
+				if(!!imageToTexture)
+					array[i][j] = [ImageTileGenerator textureFromImage:imageToTexture];
 			}
 		}
 		self->texture_ids = array;
@@ -318,17 +321,19 @@ static uint8_t *GetImageData(CGImageRef image, TextureFormat format) {
     //CGSize imageSize = CGSizeMake(CGImageGetWidth(anImage), CGImageGetHeight(anImage));
 	
 	NSMutableArray *splitLayers = [NSMutableArray array];
-	
+
 	for(int x = 0;x < slicesInX;x++) {
 		for(int y = 0;y < slicedInY;y++) {
 			CGRect frame = CGRectMake((512.0f) * x,
 									  (512.0f) * y,
 									  (512.0f),
 									  (512.0f));
+			NSLog(@"Making chunk: %@", NSStringFromCGRect(frame));
 															
 			CGImageRef subimage = CGImageCreateWithImageInRect(anImage, frame);
-			//UIImageWriteToSavedPhotosAlbum([UIImage imageWithCGImage:subimage], NULL, NULL, NULL);
-			[splitLayers addObject:[UIImage imageWithCGImage:subimage]];
+			UIImage *uiImage = [UIImage imageWithCGImage:subimage];
+			UIImageWriteToSavedPhotosAlbum(uiImage, NULL, NULL, NULL);
+			[splitLayers addObject:uiImage];
 			CFRelease(subimage);
 		}
     }

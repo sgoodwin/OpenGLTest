@@ -22,6 +22,8 @@
 		9B1274571174F23C0000381C /* VectorMatrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9B1274541174F23C0000381C /* VectorMatrix.cpp */; };
 		9B1274581174F23C0000381C /* JLMMatrixLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9B1274561174F23C0000381C /* JLMMatrixLibrary.cpp */; };
 		9B1274E11174F6AE0000381C /* GLErrorCheckAble.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B1274E01174F6AE0000381C /* GLErrorCheckAble.m */; };
+		9B1275E5117512550000381C /* danny.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9B1275E4117512550000381C /* danny.jpg */; };
+		9B1276EC117521EA0000381C /* smaller.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9B1276EB117521EA0000381C /* smaller.jpg */; };
 		9B5C562C1173971A001849F1 /* ImageTileGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B5C562B1173971A001849F1 /* ImageTileGenerator.m */; };
 		9B5C56A411739E08001849F1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B5C56A311739E08001849F1 /* CoreGraphics.framework */; };
 		9B5C56CE1173A05A001849F1 /* 1280x800.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9B5C56CD1173A05A001849F1 /* 1280x800.jpg */; };
@@ -55,6 +57,8 @@
 		9B1274561174F23C0000381C /* JLMMatrixLibrary.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JLMMatrixLibrary.cpp; sourceTree = "<group>"; };
 		9B1274DF1174F6AE0000381C /* GLErrorCheckAble.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLErrorCheckAble.h; sourceTree = "<group>"; };
 		9B1274E01174F6AE0000381C /* GLErrorCheckAble.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLErrorCheckAble.m; sourceTree = "<group>"; };
+		9B1275E4117512550000381C /* danny.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = danny.jpg; sourceTree = "<group>"; };
+		9B1276EB117521EA0000381C /* smaller.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = smaller.jpg; sourceTree = "<group>"; };
 		9B5C562A1173971A001849F1 /* ImageTileGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageTileGenerator.h; sourceTree = "<group>"; };
 		9B5C562B1173971A001849F1 /* ImageTileGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageTileGenerator.m; sourceTree = "<group>"; };
 		9B5C56A311739E08001849F1 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -140,6 +144,8 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				9B1276EB117521EA0000381C /* smaller.jpg */,
+				9B1275E4117512550000381C /* danny.jpg */,
 				9B5C56CD1173A05A001849F1 /* 1280x800.jpg */,
 				28AD733E0D9D9553002E5188 /* MainWindow.xib */,
 				8D1107310486CEB800E47090 /* OpenGLEStest-Info.plist */,
@@ -220,6 +226,8 @@
 				2514C27C10084DCA00A42282 /* Shader.vsh in Resources */,
 				28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */,
 				9B5C56CE1173A05A001849F1 /* 1280x800.jpg in Resources */,
+				9B1275E5117512550000381C /* danny.jpg in Resources */,
+				9B1276EC117521EA0000381C /* smaller.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

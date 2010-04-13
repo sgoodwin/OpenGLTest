@@ -8,12 +8,10 @@
 
 precision highp float;
 
-//varying lowp	vec4 v_rgba;
 varying	mediump vec2 v_st;
 
-uniform sampler2D	myTexture_0;
-//uniform sampler2D	myTexture_1;
+uniform sampler2D	myTexture;
 
 void main() {
-	gl_FragColor = texture2D(myTexture_0, v_st);		
+	gl_FragColor = texture2D(myTexture, v_st);		
 }
