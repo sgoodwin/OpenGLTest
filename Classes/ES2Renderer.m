@@ -85,31 +85,26 @@ enum {
 
 	
     // Replace the implementation of this method to do your own custom drawing	
-    static const GLfloat squareVertices[] = {
-		-0.5f, -0.5f,
-		 0.5f, -0.5f,
-		 -0.5f, 0.5f,
-		0.5f, 0.5f
-    };
-	
-	static const GLubyte triangles [] = { 
-		0, 1, 2, 
-		1, 2, 3
-	};
-	
-	static const GLubyte squareColors[] = {
-        255, 255,   0, 255,
-        0,   255, 255, 255,
-        0,     0,   0,   0,
-        255,   0, 255, 255,
-    };	
-	
-	static const GLfloat verticesST[] = {
+    static const GLfloat verticesST[] = {
 		
 		0.0f, 0.0f,
 		1.0f, 0.0f,
 		0.0f, 1.0f,
 		1.0f, 1.0f,
+	};
+	
+	static const GLfloat verticesXYZ[] = {
+		-0.5f, -0.5f, 0.0f,
+		0.5f, -0.5f, 0.0f,
+		-0.5f,  0.5f, 0.0f,
+		0.5f,  0.5f, 0.0f,
+	};
+	
+	static const GLubyte verticesRGBA[] = {
+		255, 255,   0, 255,
+		0,   255, 255, 255,
+		0,     0,   0, 255,
+		255,   0, 255, 255,
 	};
 	
 
@@ -156,13 +151,13 @@ enum {
 	glUniformMatrix4fv(uniforms[ProjectionViewModelUniformHandle], 1, NO, (GLfloat *)[self.rendererHelper projectionViewModelTransform]);
 	
 	
-	glVertexAttribPointer(VertexXYZAttributeHandle, 3, GL_FLOAT, 0, 0, squareVertices);
+	glVertexAttribPointer(VertexXYZAttributeHandle, 3, GL_FLOAT, 0, 0, verticesXYZ);
 	glEnableVertexAttribArray(VertexXYZAttributeHandle);
 	
 	glVertexAttribPointer(VertexSTAttributeHandle, 2, GL_FLOAT, 0, 0, verticesST);
 	glEnableVertexAttribArray(VertexSTAttributeHandle);
 	
-	glVertexAttribPointer(VertexRGBAAttributeHandle, 4, GL_UNSIGNED_BYTE, 1, 0, squareColors);
+	glVertexAttribPointer(VertexRGBAAttributeHandle, 4, GL_UNSIGNED_BYTE, 1, 0, verticesRGBA);
 	glEnableVertexAttribArray(VertexRGBAAttributeHandle);
 
 	
@@ -179,8 +174,8 @@ enum {
 #endif
 
     // Draw
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, triangles);
-    //glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, triangles);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	
 
     // This application only creates a single color renderbuffer which is already bound at this point.
@@ -336,7 +331,6 @@ enum {
 	glBindAttribLocation(program, VertexXYZAttributeHandle,	"myVertexXYZ");
 	glBindAttribLocation(program, VertexSTAttributeHandle,		"myVertexST");
     glBindAttribLocation(program, VertexRGBAAttributeHandle,	"myVertexRGBA");
-	
     return TRUE;
 }
 
