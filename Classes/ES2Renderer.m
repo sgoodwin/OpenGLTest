@@ -10,7 +10,7 @@
 #import "TEIRendererHelper.h"
 #import "ConstantsAndMacros.h"
 #import "JLMMatrixLibrary.h"
-
+#import "GLErrorCheckAble.h"
 
 // uniform index
 enum {
@@ -82,7 +82,6 @@ enum {
 	glBindTexture(GL_TEXTURE_2D, texture);
 	GLuint location = glGetUniformLocation(program, "myTexture_0");
 	glUniform1i(location, 0);
-
 	
     // Replace the implementation of this method to do your own custom drawing	
     static const GLfloat verticesST[] = {
