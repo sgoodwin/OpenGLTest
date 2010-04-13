@@ -10,16 +10,22 @@
 
 // uniform index
 enum {
-    UNIFORM_TRANSLATE,
-    NUM_UNIFORMS
+	ProjectionViewModelUniformHandle,
+	ViewModelMatrixUniformHandle,
+	ModelMatrixUniformHandle,
+	SurfaceNormalMatrixUniformHandle,
+    UniformCount
 };
-GLint uniforms[NUM_UNIFORMS];
+
+GLint uniforms[UniformCount];
 
 // attribute index
 enum {
-    ATTRIB_VERTEX,
-    ATTRIB_COLOR,
-    NUM_ATTRIBUTES
+    VertexXYZAttributeHandle,
+    VertexSTAttributeHandle,
+    VertexRGBAAttributeHandle,
+    VertexSurfaceNormalAttributeHandle,
+    AttributeCount
 };
 
 @interface ES2Renderer (PrivateMethods)
@@ -30,6 +36,7 @@ enum {
 @end
 
 @implementation ES2Renderer
+
 
 // Create an OpenGL ES 2.0 context
 - (id)init
@@ -56,11 +63,7 @@ enum {
 }
 
 - (void)render
-{	
-	glEnable(GL_TEXTURE_2D);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE, GL_SRC_COLOR);
-	
+{			
     // Replace the implementation of this method to do your own custom drawing	
     static const GLfloat squareVertices[] = {
 		-0.5f, -0.5f,
@@ -69,13 +72,27 @@ enum {
 		0.5f, 0.5f
     };
 	
-    static const GLfloat texCoords[] = {
-        0.0, 1.0,
-        1.0, 1.0,
-        0.0, 0.0,
-        1.0, 0.0
-    };
+	static const GLubyte triangles [] = { 
+		0, 1, 2, 
+		1, 2, 3
+	};
 	
+	static const GLubyte squareColors[] = {
+        255, 255,   0, 255,
+        0,   255, 255, 255,
+        0,     0,   0,   0,
+        255,   0, 255, 255,
+    };	
+	
+	static const GLfloat verticesST[] = {
+		
+		0.0f, 0.0f,
+		1.0f, 0.0f,
+		0.0f, 1.0f,
+		1.0f, 1.0f,
+	};
+	
+
     // This application only creates a single context which is already set current at this point.
     // This call is redundant, but needed if dealing with multiple contexts.
     [EAGLContext setCurrentContext:context];
@@ -89,23 +106,19 @@ enum {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Use shader program
-    //glUseProgram(program);
+    glUseProgram(program);
+	
+	glVertexAttribPointer(VertexXYZAttributeHandle, 3, GL_FLOAT, 0, 0, squareVertices);
+	glEnableVertexAttribArray(VertexXYZAttributeHandle);
+	
+	glVertexAttribPointer(VertexSTAttributeHandle, 2, GL_FLOAT, 0, 0, verticesST);
+	glEnableVertexAttribArray(VertexSTAttributeHandle);
+	
+	glVertexAttribPointer(VertexRGBAAttributeHandle, 4, GL_UNSIGNED_BYTE, 1, 0, squareColors);
+	glEnableVertexAttribArray(VertexRGBAAttributeHandle);
 
-    // Update uniform value
-    //glUniform1f(uniforms[UNIFORM_TRANSLATE], (GLfloat)transY);
 	
-	GLuint texture = [self->storage textureIDForTileAtX:2 andY:0];
-	glBindTexture(GL_TEXTURE_2D, texture);
-	
-
-	glVertexAttribPointer(7, 2, GL_FLOAT, 0, 0, texCoords);
-	glEnableVertexAttribArray(7);
-	
-    // Update attribute values
-    glVertexAttribPointer(ATTRIB_VERTEX, 2, GL_FLOAT, GL_FALSE, 0, squareVertices);
-    glEnableVertexAttribArray(ATTRIB_VERTEX);
-    //glVertexAttribPointer(ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, squareColors);
-    //glEnableVertexAttribArray(ATTRIB_COLOR);
+	//glUniformMatrix4fv(m_u_mvpHandle, 1, GL_FALSE, (GLfloat*)&mvp.m[0] );
 	
     // Validate program before drawing. This is a good check, but only really necessary in a debug build.
     // DEBUG macro must be defined in your debug configurations if that's not already the case.
@@ -118,7 +131,8 @@ enum {
 #endif
 
     // Draw
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, triangles);
+    //glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	
 
     // This application only creates a single color renderbuffer which is already bound at this point.
@@ -241,11 +255,6 @@ enum {
     // Attach fragment shader to program
     glAttachShader(program, fragShader);
 
-    // Bind attribute locations
-    // this needs to be done prior to linking
-    glBindAttribLocation(program, ATTRIB_VERTEX, "position");
-    glBindAttribLocation(program, ATTRIB_COLOR, "color");
-
     // Link program
     if (![self linkProgram:program])
     {
@@ -270,15 +279,16 @@ enum {
         return FALSE;
     }
 
-    // Get uniform locations
-    uniforms[UNIFORM_TRANSLATE] = glGetUniformLocation(program, "translate");
-
     // Release vertex and fragment shaders
     if (vertShader)
         glDeleteShader(vertShader);
     if (fragShader)
         glDeleteShader(fragShader);
 
+	glBindAttribLocation(program, VertexXYZAttributeHandle,	"myVertexXYZ");
+	glBindAttribLocation(program, VertexSTAttributeHandle,		"myVertexST");
+    glBindAttribLocation(program, VertexRGBAAttributeHandle,	"myVertexRGBA");
+	
     return TRUE;
 }
 

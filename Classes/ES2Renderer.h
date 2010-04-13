@@ -29,6 +29,9 @@
     GLuint defaultFramebuffer, colorRenderbuffer;
 
     GLuint program;
+	GLuint m_a_positionHandle;
+	GLuint m_a_colorHandle;
+	GLuint m_u_mvpHandle;
 	
 	GLfloat *geometry;
 	

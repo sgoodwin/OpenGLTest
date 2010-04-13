@@ -23,6 +23,6 @@
 - (GLuint)height;
 - (GLuint)textureIDForTileAtX:(GLuint)xCord andY:(GLuint)yCord;
 
-+ (GLuint)textureFromImage:(CGImageRef)textureFromImage;
++ (GLuint)textureFromImage:(UIImage*)image;
 + (NSArray*)splitImageIntoRects:(CGImageRef)anImage with:(GLuint)slicesInX and:(GLuint)slicedInY;
 @end

@@ -6,17 +6,31 @@
 //  Copyright ID345 2010. All rights reserved.
 //
 
-attribute vec4 position;
-attribute vec4 color;
+attribute lowp		vec4	myVertexRGBA;
+attribute mediump	vec2	myVertexST;
+attribute highp		vec4	myVertexXYZ;
 
-varying vec4 colorVarying;
+// M - World space
+uniform mediump mat4	myModelMatrix;
 
-uniform float translate;
+// The surface normal transform is the inverse of M
+uniform mediump mat4	mySurfaceNormalMatrix;
 
-void main()
-{
-    gl_Position = position;
-    gl_Position.y += sin(translate) / 2.0;
+// V * M - Eye space
+uniform mediump mat4	myViewModelMatrix;
 
-    colorVarying = color;
+// P * V * M - Projection space
+uniform mediump mat4	myProjectionViewModelMatrix;
+
+varying lowp	vec4 v_rgba;
+varying	mediump vec2 v_st;
+
+void main() {
+
+	gl_Position = myProjectionViewModelMatrix * myVertexXYZ;
+
+	vec4 worldSpaceVertex = myModelMatrix * myVertexXYZ;
+
+	v_st	= myVertexST;
+	v_rgba	= myVertexRGBA;
 }
