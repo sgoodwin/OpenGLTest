@@ -9,11 +9,13 @@
 attribute mediump	vec2	myVertexST;
 attribute highp		vec4	myVertexXYZ;
 
+uniform float translate;
+
 varying	mediump vec2 v_st;
 
 void main() {
 
 	gl_Position = myVertexXYZ;
-	gl_Position.y = gl_Position.y/1.3333333333;
+	gl_Position.y = gl_Position.y/(4.0/3.0);
 	v_st	= myVertexST;
 }

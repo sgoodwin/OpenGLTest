@@ -77,6 +77,7 @@ enum {
 - (void)render{			
 	if(drawn)
 		return;
+	
     glViewport(0, 0, backingWidth, backingHeight);
 
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
@@ -88,6 +89,7 @@ enum {
 	
     // Use shader program
     glUseProgram(program);
+	
 	for(GLuint i = 0;i <  [self->storage width];i++
 		){
 		for(GLuint j=0;j < [self->storage height];j++){
@@ -293,6 +295,12 @@ enum {
 
 	glBindAttribLocation(program, VertexXYZAttributeHandle,	"myVertexXYZ");
 	glBindAttribLocation(program, VertexSTAttributeHandle,		"myVertexST");
+	// Associate shader uniform variables with application space variables
+	uniforms[ProjectionViewModelUniformHandle	] = glGetUniformLocation(program, "myProjectionViewModelMatrix");
+	uniforms[ViewModelMatrixUniformHandle		] = glGetUniformLocation(program, "myViewModelMatrix");
+	uniforms[ModelMatrixUniformHandle			] = glGetUniformLocation(program, "myModelMatrix");
+	uniforms[SurfaceNormalMatrixUniformHandle	] = glGetUniformLocation(program, "mySurfaceNormalMatrix");
+	
     return TRUE;
 }
 
