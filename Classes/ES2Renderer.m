@@ -37,7 +37,7 @@ enum {
 @end
 
 @implementation ES2Renderer
-@synthesize rendererHelper = _rendererHelper;
+@synthesize rendererHelper = _rendererHelper, drawn;
 
 // Create an OpenGL ES 2.0 context
 - (id)init
@@ -67,26 +67,25 @@ enum {
 		glEnable (GL_REPLACE);
 		
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		
+		drawn = NO;
     }
 
     return self;
 }
 
 - (void)render{			
-    // This application only creates a single context which is already set current at this point.
-    // This call is redundant, but needed if dealing with multiple contexts.
-
-    // This application only creates a single default framebuffer which is already bound at this point.
-    // This call is redundant, but needed if dealing with multiple framebuffers.
+	if(drawn)
+		return;
     glViewport(0, 0, backingWidth, backingHeight);
 
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+		
     // Use shader program
     glUseProgram(program);
-	
-	for(GLuint i = 0;i < [self->storage width];i++){
+	for(GLuint i = 0;i <  [self->storage width];i++
+		){
 		for(GLuint j=0;j < [self->storage height];j++){
 			static GLfloat verticesST[] = {
 				0.0f, 0.0f,
@@ -110,7 +109,6 @@ enum {
 			verticesXYZ[4] = -1.0f+(GLfloat)j*0.5f;
 			verticesXYZ[7] = -0.5f+(GLfloat)j*0.5f;
 			verticesXYZ[10] = -0.5f+(GLfloat)j*0.5f;
-	
 			glActiveTexture( GL_TEXTURE0 );
 			GLuint texture = [self->storage textureIDForTileAtX:i andY:j];
 			glBindTexture(GL_TEXTURE_2D, texture);
@@ -142,6 +140,7 @@ enum {
     // This call is redundant, but needed if dealing with multiple renderbuffers.
     glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
     [context presentRenderbuffer:GL_RENDERBUFFER];
+	drawn = YES;
 }
 
 - (BOOL)compileShader:(GLuint *)shader type:(GLenum)type file:(NSString *)file

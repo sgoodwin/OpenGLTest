@@ -39,8 +39,11 @@
 	GLfloat *geometry;
 	
 	ImageTileGenerator *storage;
+	
+	BOOL drawn;
 }
 @property (nonatomic, retain) TEIRendererHelper *rendererHelper;
+@property (nonatomic, assign) BOOL drawn;
 
 - (void)render;
 - (BOOL)resizeFromLayer:(CAEAGLLayer *)layer;

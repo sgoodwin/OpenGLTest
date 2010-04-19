@@ -138,8 +138,8 @@ static uint8_t *GetImageData(CGImageRef image, TextureFormat format) {
 	int src_width	= CGImageGetWidth(image);
 	int src_height	= CGImageGetHeight(image);
 	
-	int width	= NextPowerOfTwo(src_width);
-	int height	= NextPowerOfTwo(src_height);
+	int width	= 512;//NextPowerOfTwo(src_width);
+	int height	= 512;//NextPowerOfTwo(src_height);
 	
 	int num_channels = 0;
 	
@@ -205,7 +205,7 @@ static uint8_t *GetImageData(CGImageRef image, TextureFormat format) {
 		return NULL;
 	}
 	
-    CGContextSetBlendMode(context, kCGBlendModeCopy);
+    CGContextSetBlendMode(context, kCGBlendModeNormal);
 	
 	// This is needed because Quartz uses an origin at lower left and UIKit uses
 	// origin at upper left
@@ -221,7 +221,12 @@ static uint8_t *GetImageData(CGImageRef image, TextureFormat format) {
 	CGAffineTransform flipped = CGAffineTransformMake(1, 0, 0, -1, 0, height);
 	CGContextConcatCTM(context, flipped);
 	
-	CGRect rect =  CGRectMake(0, 0, width, height);
+	NSLog(@"image size is (%i,%i) but rect is (%i,%i)", src_width, src_height, width, height);
+	CGRect rect =  CGRectMake(0.0f, 0.0f, (CGFloat)src_width, (CGFloat)src_height);
+	NSLog(@"Drawing chunk into rect: %@", NSStringFromCGRect(rect));
+	
+	CGContextSetFillColorWithColor(context, [[UIColor grayColor] CGColor]);
+	CGContextFillRect(context, CGRectMake(0.0f, 0.0f, (CGFloat)width, (CGFloat)height));
 	CGContextDrawImage(context, rect, image);
 	
 	CGContextRelease(context);
@@ -241,18 +246,12 @@ static uint8_t *GetImageData(CGImageRef image, TextureFormat format) {
 		NSLog(@"Alive! (%.2f,%.2f) => (%i,%i)", aWidth, aHeight, arrayWidth, arrayHeight);
 		
 		NSArray *splits = [ImageTileGenerator splitImageIntoRects:image.CGImage with:arrayWidth and:arrayHeight];
-		NSLog(@"split image into %d pieces.", [splits count]);
 			  
-		GLuint** array = (GLuint**)malloc(arrayWidth * sizeof(GLuint*));
-		for (GLuint i = 0;i < arrayWidth;i++){
-			array[i] = (GLuint*)malloc(arrayHeight * sizeof(GLuint));
-			for(GLuint j=arrayHeight-1;j>0;j--){
-				GLuint index = (i*(arrayWidth-1))+j;
-				NSLog(@"(%i, %i) => %i", i, j, index);
-				UIImage *imageToTexture = [splits objectAtIndex:index];
-				if(!!imageToTexture)
-					array[i][j] = [ImageTileGenerator textureFromImage:imageToTexture];
-			}
+		GLuint* array = (GLuint*)malloc([splits count]* sizeof(GLuint));
+		for(NSUInteger i = 0;i<[splits count];i++){
+			UIImage *image = [splits objectAtIndex:i];
+			GLuint texture = [[self class] textureFromImage:image];
+			array[i] = texture;
 		}
 		self->texture_ids = array;
 	}
@@ -269,7 +268,9 @@ static uint8_t *GetImageData(CGImageRef image, TextureFormat format) {
 
 
 - (GLuint)textureIDForTileAtX:(GLuint)xCord andY:(GLuint)yCord{
-	GLuint texture = self->texture_ids[xCord][yCord];
+	int index = ([self height]*(xCord+1))-(yCord+1);
+	GLuint texture = self->texture_ids[index];
+	NSLog(@"(%i,%i)=>%i=>%i", xCord, yCord, index, texture-1);
 	if(texture == -1){
 		NSLog(@"No texture yet!");
 	}
@@ -311,7 +312,6 @@ static uint8_t *GetImageData(CGImageRef image, TextureFormat format) {
 		
 		free(data);
 	}
-	
 	return texture[0];
 }
 
@@ -327,11 +327,10 @@ static uint8_t *GetImageData(CGImageRef image, TextureFormat format) {
 									  (512.0f) * y,
 									  (512.0f),
 									  (512.0f));
-			NSLog(@"Making chunk: %@", NSStringFromCGRect(frame));
 															
 			CGImageRef subimage = CGImageCreateWithImageInRect(anImage, frame);
 			UIImage *uiImage = [UIImage imageWithCGImage:subimage];
-			UIImageWriteToSavedPhotosAlbum(uiImage, NULL, NULL, NULL);
+			//UIImageWriteToSavedPhotosAlbum(uiImage, NULL, NULL, NULL);
 			[splitLayers addObject:uiImage];
 			CFRelease(subimage);
 		}

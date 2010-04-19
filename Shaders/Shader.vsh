@@ -14,5 +14,6 @@ varying	mediump vec2 v_st;
 void main() {
 
 	gl_Position = myVertexXYZ;
+	gl_Position.y = gl_Position.y/1.3333333333;
 	v_st	= myVertexST;
 }

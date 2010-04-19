@@ -13,7 +13,7 @@
 @interface ImageTileGenerator : NSObject {
 	GLuint arrayWidth;
 	GLuint arrayHeight;
-	GLuint **texture_ids;
+	GLuint *texture_ids;
 	
 	GLfloat *geometry;
 }
