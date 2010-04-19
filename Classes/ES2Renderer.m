@@ -82,6 +82,10 @@ enum {
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
+	GLfloat squareSize = 2.0f/[self->storage width];
+	GLfloat xStart = -1.0f;
+	GLfloat yStart = 0.0f-squareSize*([self->storage height]/2.0f);
+	
     // Use shader program
     glUseProgram(program);
 	for(GLuint i = 0;i <  [self->storage width];i++
@@ -96,19 +100,19 @@ enum {
 	
 			static GLfloat verticesXYZ[] = {
 				-1.0f, -1.0f, 0.0f,
-				-0.5f, -1.0f, 0.0f,
+				-1.0f, -1.0f, 0.0f,
 				-1.0f,  -0.5f, 0.0f,
 				-0.5f,  -0.5f, 0.0f,
 			};
-			verticesXYZ[0] = -1.0f+(GLfloat)i*0.5f;
-			verticesXYZ[3] = -0.5f+(GLfloat)i*0.5f;
-			verticesXYZ[6] = -1.0f+(GLfloat)i*0.5f;
-			verticesXYZ[9] = -0.5f+(GLfloat)i*0.5f;
+			verticesXYZ[0] = xStart+(GLfloat)i*squareSize;
+			verticesXYZ[3] = verticesXYZ[0]+squareSize;
+			verticesXYZ[6] = verticesXYZ[0];
+			verticesXYZ[9] = verticesXYZ[0]+squareSize;
 			
-			verticesXYZ[1] = -1.0f+(GLfloat)j*0.5f;
-			verticesXYZ[4] = -1.0f+(GLfloat)j*0.5f;
-			verticesXYZ[7] = -0.5f+(GLfloat)j*0.5f;
-			verticesXYZ[10] = -0.5f+(GLfloat)j*0.5f;
+			verticesXYZ[1] = yStart+(GLfloat)j*squareSize;
+			verticesXYZ[4] = verticesXYZ[1];
+			verticesXYZ[7] = verticesXYZ[1]+squareSize;
+			verticesXYZ[10] = verticesXYZ[1]+squareSize;
 			glActiveTexture( GL_TEXTURE0 );
 			GLuint texture = [self->storage textureIDForTileAtX:i andY:j];
 			glBindTexture(GL_TEXTURE_2D, texture);
