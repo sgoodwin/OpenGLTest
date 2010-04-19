@@ -16,6 +16,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions   
 {
+	[window setBackgroundColor:[UIColor grayColor]];
     [glView startAnimation];
     return YES;
 }
@@ -41,6 +42,19 @@
     [glView release];
 
     [super dealloc];
+}
+
+
+- (IBAction)rotateRight{
+	[UIView beginAnimations:@"rotation" context:nil];
+	glView.transform = CGAffineTransformConcat(glView.transform, CGAffineTransformMakeRotation(M_PI/2.0f));
+	[UIView commitAnimations];
+}
+
+- (IBAction)rotateLeft{
+	[UIView beginAnimations:@"rotation" context:nil];
+	glView.transform = CGAffineTransformConcat(glView.transform, CGAffineTransformMakeRotation(-M_PI/2.0f));
+	[UIView commitAnimations];
 }
 
 @end
