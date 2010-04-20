@@ -31,10 +31,18 @@
     NSTimer *animationTimer;
 	
 	BOOL needsRendering;
+	
+	UISlider *contrastSlider;
+	UISlider *brightnessSlider;
+	UISlider *saturationSlider;
 }
 
 @property (readonly, nonatomic, getter=isAnimating) BOOL animating;
 @property (nonatomic) NSInteger animationFrameInterval;
+
+@property(nonatomic, retain) IBOutlet UISlider *contrastSlider;
+@property(nonatomic, retain) IBOutlet UISlider *brightnessSlider;
+@property(nonatomic, retain) IBOutlet UISlider *saturationSlider;
 
 - (void)startAnimation;
 - (void)stopAnimation;
@@ -42,4 +50,6 @@
 - (void)setNeedsRendering;
 
 - (IBAction)brightnessChanged:(UISlider*)sender;
+- (IBAction)contrastChanged:(UISlider*)sender;
+- (IBAction)saturationChanged:(UISlider*)sender;
 @end

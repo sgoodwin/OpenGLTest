@@ -9,27 +9,28 @@
 attribute mediump	vec2	myVertexST;
 attribute highp		vec4	myVertexXYZ;
 
-attribute float myHue;
+//attribute float myHue;
 attribute float mySaturation;
-attribute float mySharpness;
+//attribute float mySharpness;
 attribute float myContrast;
 attribute float myBrightness;
 
 varying	mediump vec2 v_st;
-varying float f_hue;
-varying float f_saturation;
-varying float f_sharpness;
-varying float f_contrast;
-varying float f_brightness;
+//varying highp float f_hue;
+varying highp float f_saturation;
+//varying highp float f_sharpness;
+varying highp float f_contrast;
+varying highp float f_brightness;
 
 void main() {
 
 	gl_Position = myVertexXYZ;
 	gl_Position.y = gl_Position.y/(4.0/3.0);
 	v_st	= myVertexST;
-	f_hue = myHue;
+	
+	//f_hue = myHue;
 	f_saturation = mySaturation;
-	f_sharpness = mySharpness;
+	//f_sharpness = mySharpness;
 	f_contrast = myContrast;
 	f_brightness = myBrightness;
 }

@@ -82,7 +82,7 @@ enum {
 }
 
 - (void)render{			
-	NSLog(@"Rendering with adjusted brightness: %f, hue: %f, saturation: %f, sharpness %f, and contrast %f", brightness, hue, saturation, contrast);
+	NSLog(@"Rendering with adjusted brightness: %f, hue: %f, saturation: %f, sharpness %f, and contrast %f", brightness, hue, saturation, sharpness, contrast);
     glViewport(0, 0, backingWidth, backingHeight);
 
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
@@ -95,12 +95,11 @@ enum {
     // Use shader program
     glUseProgram(program);
 	
-	glVertexAttrib1f(IDHue, self->hue);
+	//glVertexAttrib1f(IDHue, self->hue);
 	glVertexAttrib1f(IDSaturation, self->saturation);
-	glVertexAttrib1f(IDSharpness, self->sharpness);
+	//glVertexAttrib1f(IDSharpness, self->sharpness);
 	glVertexAttrib1f(IDContrast, self->contrast);
 	glVertexAttrib1f(IDBrightness, self->brightness);
-	
 	
 	for(GLuint i = 0;i <  [self->storage width];i++
 		){
@@ -307,9 +306,9 @@ enum {
 	glBindAttribLocation(program, VertexXYZAttributeHandle,	"myVertexXYZ");
 	glBindAttribLocation(program, VertexSTAttributeHandle,		"myVertexST");
 	
-	glBindAttribLocation(program, IDHue, "myHue");
-	glBindAttribLocation(program, IDSaturation, "mySaturation");
-	glBindAttribLocation(program, IDSharpness, "mySharpness");
+	//glBindAttribLocation(program, IDHue, "myHue");
+	//glBindAttribLocation(program, IDSaturation, "mySaturation");
+	//glBindAttribLocation(program, IDSharpness, "mySharpness");
 	glBindAttribLocation(program, IDContrast, "myContrast");
 	glBindAttribLocation(program, IDBrightness, "myBrightness");
 	
@@ -377,7 +376,7 @@ enum {
 #pragma mark Color fuckery;
 
 - (BOOL)checkValue:(GLfloat)value{
-	if(value > -1.0f && value < 1.0f)
+	if(value > 0.0f && value <= 2.0f)
 		return YES;
 	return NO;
 }

@@ -14,6 +14,7 @@
 
 @synthesize animating;
 @dynamic animationFrameInterval;
+@synthesize contrastSlider, brightnessSlider, saturationSlider;
 
 // You must implement this method
 + (Class)layerClass
@@ -39,6 +40,9 @@
 			[self release];
 			return nil;
         }
+		[renderer setBrightness:1.0f];
+		[renderer setContrast:1.0f];
+		[renderer setSaturation:1.0f];
 
         animating = FALSE;
         displayLinkSupported = TRUE;
@@ -141,6 +145,17 @@
 }
 
 - (IBAction)brightnessChanged:(UISlider*)sender{
-	[renderer setBrightness:sender.value];
+	[renderer setBrightness:self.brightnessSlider.value];
+	[self setNeedsRendering];
+}
+
+- (IBAction)contrastChanged:(UISlider*)sender{
+	[renderer setContrast:self.contrastSlider.value];
+	[self setNeedsRendering];
+}
+
+- (IBAction)saturationChanged:(UISlider*)sender{
+	[renderer setSaturation:self.saturationSlider.value];
+	[self setNeedsRendering];
 }
 @end
