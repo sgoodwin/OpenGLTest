@@ -22,6 +22,15 @@ enum {
 
 GLint uniforms[UniformCount];
 
+enum {
+	IDHue,
+	IDSaturation,
+	IDBrightness,
+	IDSharpness,
+	IDContrast,
+	IDAdjustmentsCount
+};
+
 // attribute index
 enum {
     VertexXYZAttributeHandle,
@@ -37,7 +46,7 @@ enum {
 @end
 
 @implementation ES2Renderer
-@synthesize rendererHelper = _rendererHelper, drawn;
+@synthesize rendererHelper = _rendererHelper;
 
 // Create an OpenGL ES 2.0 context
 - (id)init
@@ -67,17 +76,13 @@ enum {
 		glEnable (GL_REPLACE);
 		
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		
-		drawn = NO;
     }
 
     return self;
 }
 
 - (void)render{			
-	if(drawn)
-		return;
-	
+	NSLog(@"Rendering with adjusted brightness: %f, hue: %f, saturation: %f, sharpness %f, and contrast %f", brightness, hue, saturation, contrast);
     glViewport(0, 0, backingWidth, backingHeight);
 
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
@@ -89,6 +94,13 @@ enum {
 	
     // Use shader program
     glUseProgram(program);
+	
+	glVertexAttrib1f(IDHue, self->hue);
+	glVertexAttrib1f(IDSaturation, self->saturation);
+	glVertexAttrib1f(IDSharpness, self->sharpness);
+	glVertexAttrib1f(IDContrast, self->contrast);
+	glVertexAttrib1f(IDBrightness, self->brightness);
+	
 	
 	for(GLuint i = 0;i <  [self->storage width];i++
 		){
@@ -120,7 +132,7 @@ enum {
 			glBindTexture(GL_TEXTURE_2D, texture);
 			GLuint location = glGetUniformLocation(program, "myTexture");
 			glUniform1i(location, 0);
-	
+			
 			glVertexAttribPointer(VertexXYZAttributeHandle, 3, GL_FLOAT, 0, 0, verticesXYZ);
 			glEnableVertexAttribArray(VertexXYZAttributeHandle);
 	
@@ -141,12 +153,11 @@ enum {
 			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		}
 	}
-
+	
     // This application only creates a single color renderbuffer which is already bound at this point.
     // This call is redundant, but needed if dealing with multiple renderbuffers.
     glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
     [context presentRenderbuffer:GL_RENDERBUFFER];
-	drawn = YES;
 }
 
 - (BOOL)compileShader:(GLuint *)shader type:(GLenum)type file:(NSString *)file
@@ -295,6 +306,13 @@ enum {
 
 	glBindAttribLocation(program, VertexXYZAttributeHandle,	"myVertexXYZ");
 	glBindAttribLocation(program, VertexSTAttributeHandle,		"myVertexST");
+	
+	glBindAttribLocation(program, IDHue, "myHue");
+	glBindAttribLocation(program, IDSaturation, "mySaturation");
+	glBindAttribLocation(program, IDSharpness, "mySharpness");
+	glBindAttribLocation(program, IDContrast, "myContrast");
+	glBindAttribLocation(program, IDBrightness, "myBrightness");
+	
 	// Associate shader uniform variables with application space variables
 	uniforms[ProjectionViewModelUniformHandle	] = glGetUniformLocation(program, "myProjectionViewModelMatrix");
 	uniforms[ViewModelMatrixUniformHandle		] = glGetUniformLocation(program, "myViewModelMatrix");
@@ -354,5 +372,40 @@ enum {
 
     [super dealloc];
 }
+
+# pragma mark -
+#pragma mark Color fuckery;
+
+- (BOOL)checkValue:(GLfloat)value{
+	if(value > -1.0f && value < 1.0f)
+		return YES;
+	return NO;
+}
+
+- (void)setBrightness:(GLfloat)bright{
+	if([self checkValue:bright])
+		self->brightness = bright;
+}
+
+- (void)setContrast:(GLfloat)cont{
+	if([self checkValue:cont])
+		self->contrast=cont;
+}
+
+- (void)setSaturation:(GLfloat)sat{
+	if([self checkValue:sat])
+		self->saturation=sat;
+}
+
+- (void)setHue:(GLfloat)hu{
+	if([self checkValue:hu])
+		self->hue=hu;
+}
+
+- (void)setSharpness:(GLfloat)sharp{
+	if([self checkValue:sharp])
+		self->sharpness=sharp;
+}
+
 
 @end

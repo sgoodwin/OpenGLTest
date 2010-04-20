@@ -16,6 +16,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions   
 {
+	angle = 0;
 	[window setBackgroundColor:[UIColor grayColor]];
     [glView startAnimation];
     return YES;
@@ -47,14 +48,23 @@
 
 - (IBAction)rotateRight{
 	[UIView beginAnimations:@"rotation" context:nil];
-	glView.transform = CGAffineTransformConcat(glView.transform, CGAffineTransformMakeRotation(M_PI/2.0f));
+	[UIView setAnimationDelegate:self];
+	[UIView setAnimationDidStopSelector:@selector(done:)];
+	angle +=1;
+	glView.transform = CGAffineTransformConcat(glView.transform, CGAffineTransformMakeRotation((M_PI/2.0f)));
 	[UIView commitAnimations];
 }
 
 - (IBAction)rotateLeft{
 	[UIView beginAnimations:@"rotation" context:nil];
-	glView.transform = CGAffineTransformConcat(glView.transform, CGAffineTransformMakeRotation(-M_PI/2.0f));
+	[UIView setAnimationDelegate:self];
+	[UIView setAnimationDidStopSelector:@selector(done:)];
+	angle -=1;
+	glView.transform = CGAffineTransformConcat(glView.transform, CGAffineTransformMakeRotation((-M_PI/2.0f)));
 	[UIView commitAnimations];
 }
 
+- (void)done:(id)sender{
+	[glView setNeedsRendering];
+}
 @end

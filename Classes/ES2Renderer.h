@@ -38,12 +38,22 @@
 	
 	GLfloat *geometry;
 	
-	ImageTileGenerator *storage;
+	GLfloat brightness;
+	GLfloat contrast;
+	GLfloat saturation;
+	CGFloat hue;
+	CGFloat sharpness;
 	
-	BOOL drawn;
+	ImageTileGenerator *storage;
 }
 @property (nonatomic, retain) TEIRendererHelper *rendererHelper;
-@property (nonatomic, assign) BOOL drawn;
+- (BOOL)checkValue:(GLfloat)value;
+- (void)setBrightness:(GLfloat)bright;
+- (void)setContrast:(GLfloat)cont;
+- (void)setSaturation:(GLfloat)sat;
+- (void)setHue:(GLfloat)hu;
+- (void)setSharpness:(GLfloat)sharp;
+
 
 - (void)render;
 - (BOOL)resizeFromLayer:(CAEAGLLayer *)layer;

@@ -45,6 +45,7 @@
         animationFrameInterval = 1;
         displayLink = nil;
         animationTimer = nil;
+		needsRendering = YES;
 	}
 
     return self;
@@ -52,7 +53,9 @@
 
 - (void)drawView:(id)sender
 {
-    [renderer render];
+	if(needsRendering)
+		[renderer render];
+	needsRendering = NO;
 }
 
 - (void)layoutSubviews
@@ -133,4 +136,11 @@
     [super dealloc];
 }
 
+- (void)setNeedsRendering{
+	needsRendering = YES;
+}
+
+- (IBAction)brightnessChanged:(UISlider*)sender{
+	[renderer setBrightness:sender.value];
+}
 @end

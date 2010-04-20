@@ -221,9 +221,7 @@ static uint8_t *GetImageData(CGImageRef image, TextureFormat format) {
 	CGAffineTransform flipped = CGAffineTransformMake(1, 0, 0, -1, 0, height);
 	CGContextConcatCTM(context, flipped);
 	
-	NSLog(@"image size is (%i,%i) but rect is (%i,%i)", src_width, src_height, width, height);
 	CGRect rect =  CGRectMake(0.0f, 0.0f, (CGFloat)src_width, (CGFloat)src_height);
-	NSLog(@"Drawing chunk into rect: %@", NSStringFromCGRect(rect));
 	
 	CGContextSetFillColorWithColor(context, [[UIColor grayColor] CGColor]);
 	CGContextFillRect(context, CGRectMake(0.0f, 0.0f, (CGFloat)width, (CGFloat)height));
@@ -243,7 +241,6 @@ static uint8_t *GetImageData(CGImageRef image, TextureFormat format) {
 		
 		arrayWidth = ceil(aWidth/512.0f);
 		arrayHeight = ceil(aHeight/512.0f);
-		NSLog(@"Alive! (%.2f,%.2f) => (%i,%i)", aWidth, aHeight, arrayWidth, arrayHeight);
 		
 		NSArray *splits = [ImageTileGenerator splitImageIntoRects:image.CGImage with:arrayWidth and:arrayHeight];
 			  
@@ -270,7 +267,6 @@ static uint8_t *GetImageData(CGImageRef image, TextureFormat format) {
 - (GLuint)textureIDForTileAtX:(GLuint)xCord andY:(GLuint)yCord{
 	int index = ([self height]*(xCord+1))-(yCord+1);
 	GLuint texture = self->texture_ids[index];
-	NSLog(@"(%i,%i)=>%i=>%i", xCord, yCord, index, texture-1);
 	if(texture == -1){
 		NSLog(@"No texture yet!");
 	}

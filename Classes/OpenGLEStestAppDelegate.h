@@ -13,6 +13,8 @@
 @interface OpenGLEStestAppDelegate : NSObject <UIApplicationDelegate> {
     UIWindow *window;
     EAGLView *glView;
+	
+	int angle;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
