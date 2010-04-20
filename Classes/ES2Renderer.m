@@ -30,6 +30,7 @@ enum {
 	IDContrast,
 	IDAdjustmentsCount
 };
+GLint adjustments[IDAdjustmentsCount];
 
 // attribute index
 enum {
@@ -82,7 +83,7 @@ enum {
 }
 
 - (void)render{			
-	NSLog(@"Rendering with adjusted brightness: %f, hue: %f, saturation: %f, sharpness %f, and contrast %f", brightness, hue, saturation, sharpness, contrast);
+	//NSLog(@"Rendering with adjusted brightness: %f, hue: %f, saturation: %f, sharpness %f, and contrast %f", brightness, hue, saturation, sharpness, contrast);
     glViewport(0, 0, backingWidth, backingHeight);
 
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
@@ -96,10 +97,10 @@ enum {
     glUseProgram(program);
 	
 	//glVertexAttrib1f(IDHue, self->hue);
-	glVertexAttrib1f(IDSaturation, self->saturation);
+	glVertexAttrib1f(adjustments[IDSaturation], self->saturation);
 	//glVertexAttrib1f(IDSharpness, self->sharpness);
-	glVertexAttrib1f(IDContrast, self->contrast);
-	glVertexAttrib1f(IDBrightness, self->brightness);
+	glVertexAttrib1f(adjustments[IDContrast], self->contrast);
+	glVertexAttrib1f(adjustments[IDBrightness], self->brightness);
 	
 	for(GLuint i = 0;i <  [self->storage width];i++
 		){
@@ -307,10 +308,9 @@ enum {
 	glBindAttribLocation(program, VertexSTAttributeHandle,		"myVertexST");
 	
 	//glBindAttribLocation(program, IDHue, "myHue");
-	//glBindAttribLocation(program, IDSaturation, "mySaturation");
-	//glBindAttribLocation(program, IDSharpness, "mySharpness");
-	glBindAttribLocation(program, IDContrast, "myContrast");
-	glBindAttribLocation(program, IDBrightness, "myBrightness");
+	adjustments[IDContrast] = glGetAttribLocation(program, "myContrast");
+	adjustments[IDSharpness] = glGetAttribLocation(program, "mySharpness");
+	adjustments[IDSaturation] = glGetAttribLocation(program, "mySaturation");
 	
 	// Associate shader uniform variables with application space variables
 	uniforms[ProjectionViewModelUniformHandle	] = glGetUniformLocation(program, "myProjectionViewModelMatrix");

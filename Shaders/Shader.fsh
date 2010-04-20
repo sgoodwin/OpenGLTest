@@ -42,8 +42,8 @@ vec3 contrastSaturationBrightness(vec3 color, float brt, float sat, float contra
 
 void main() {
 	vec4 source = texture2D(myTexture, v_st);
-	vec3 tmpColor = vec3(source.x, source.y, source.z);
-	vec3 csb = contrastSaturationBrightness(tmpColor, 1.0, 1.0, 1.0);//f_brightness, f_saturation, f_contrast);
-	vec4 color = vec4(csb.x, csb.y, csb.z, 0.0);
-	gl_FragColor = vec4(csb.x, csb.y, csb.z, 0.0);
+	vec3 tmpColor = vec3(source[0], source[1], source[2]);
+	vec3 csb = contrastSaturationBrightness(tmpColor, f_brightness, f_saturation, f_contrast);
+	//vec4 color = vec4(csb.x, csb.y, csb.z, 1.0);
+	gl_FragColor = vec4(csb.x, csb.y, csb.z, 7.0);
 }
