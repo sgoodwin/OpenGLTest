@@ -42,7 +42,6 @@
 	GLfloat contrast;
 	GLfloat saturation;
 	CGFloat hue;
-	CGFloat sharpness;
 	
 	ImageTileGenerator *storage;
 }
@@ -52,7 +51,6 @@
 - (void)setContrast:(GLfloat)cont;
 - (void)setSaturation:(GLfloat)sat;
 - (void)setHue:(GLfloat)hu;
-- (void)setSharpness:(GLfloat)sharp;
 
 
 - (void)render;

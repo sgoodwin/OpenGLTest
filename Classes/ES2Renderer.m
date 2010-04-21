@@ -26,7 +26,6 @@ enum {
 	IDHue,
 	IDSaturation,
 	IDBrightness,
-	IDSharpness,
 	IDContrast,
 	IDAdjustmentsCount
 };
@@ -96,12 +95,11 @@ enum {
     // Use shader program
     glUseProgram(program);
 	
-	//glVertexAttrib1f(IDHue, self->hue);
+	glVertexAttrib1f(adjustments[IDHue], self->hue);
 	glVertexAttrib1f(adjustments[IDSaturation], self->saturation);
-	//glVertexAttrib1f(IDSharpness, self->sharpness);
 	glVertexAttrib1f(adjustments[IDContrast], self->contrast);
 	glVertexAttrib1f(adjustments[IDBrightness], self->brightness);
-	NSLog(@"fed brightness: %f, contrast: %f, and saturation: %f values", self->brightness, self->contrast, self->saturation);
+	NSLog(@"fed brightness: %f, contrast: %f, and saturation: %f, and hue: %f values", self->brightness, self->contrast, self->saturation, self->hue);
 	
 	for(GLuint i = 0;i <  [self->storage width];i++
 		){
@@ -310,7 +308,6 @@ enum {
 	
 	//glBindAttribLocation(program, IDHue, "myHue");
 	adjustments[IDContrast] = glGetAttribLocation(program, "myContrast");
-	adjustments[IDSharpness] = glGetAttribLocation(program, "mySharpness");
 	adjustments[IDSaturation] = glGetAttribLocation(program, "mySaturation");
 	adjustments[IDBrightness] = glGetAttribLocation(program, "myBrightness");
 	adjustments[IDHue] = glGetAttribLocation(program, "myHue");
@@ -403,11 +400,5 @@ enum {
 	if([self checkValue:hu])
 		self->hue=hu;
 }
-
-- (void)setSharpness:(GLfloat)sharp{
-	if([self checkValue:sharp])
-		self->sharpness=sharp;
-}
-
 
 @end

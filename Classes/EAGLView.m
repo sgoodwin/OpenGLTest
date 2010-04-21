@@ -14,7 +14,7 @@
 
 @synthesize animating;
 @dynamic animationFrameInterval;
-@synthesize contrastSlider, brightnessSlider, saturationSlider;
+@synthesize contrastSlider, brightnessSlider, saturationSlider, hueSlider;
 
 // You must implement this method
 + (Class)layerClass
@@ -43,6 +43,7 @@
 		[renderer setBrightness:1.0f];
 		[renderer setContrast:1.0f];
 		[renderer setSaturation:1.0f];
+		[renderer setHue:1.0f];
 
         animating = FALSE;
         displayLinkSupported = TRUE;
@@ -156,6 +157,11 @@
 
 - (IBAction)saturationChanged:(UISlider*)sender{
 	[renderer setSaturation:self.saturationSlider.value];
+	[self setNeedsRendering];
+}
+
+- (IBAction)hueChanged:(UISlider*)sender{
+	[renderer setHue:self.hueSlider.value];
 	[self setNeedsRendering];
 }
 @end

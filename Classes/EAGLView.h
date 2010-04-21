@@ -35,6 +35,7 @@
 	UISlider *contrastSlider;
 	UISlider *brightnessSlider;
 	UISlider *saturationSlider;
+	UISlider *hueSlider;
 }
 
 @property (readonly, nonatomic, getter=isAnimating) BOOL animating;
@@ -43,6 +44,7 @@
 @property(nonatomic, retain) IBOutlet UISlider *contrastSlider;
 @property(nonatomic, retain) IBOutlet UISlider *brightnessSlider;
 @property(nonatomic, retain) IBOutlet UISlider *saturationSlider;
+@property(nonatomic, retain) IBOutlet UISlider *hueSlider;
 
 - (void)startAnimation;
 - (void)stopAnimation;
@@ -52,4 +54,5 @@
 - (IBAction)brightnessChanged:(UISlider*)sender;
 - (IBAction)contrastChanged:(UISlider*)sender;
 - (IBAction)saturationChanged:(UISlider*)sender;
+- (IBAction)hueChanged:(UISlider*)sender;
 @end
