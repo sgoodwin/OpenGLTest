@@ -20,7 +20,7 @@ enum {
     UniformCount
 };
 
-GLint uniforms[UniformCount];
+GLuint uniforms[UniformCount];
 
 enum {
 	IDHue,
@@ -30,7 +30,7 @@ enum {
 	IDContrast,
 	IDAdjustmentsCount
 };
-GLint adjustments[IDAdjustmentsCount];
+GLuint adjustments[IDAdjustmentsCount];
 
 // attribute index
 enum {
@@ -101,6 +101,7 @@ enum {
 	//glVertexAttrib1f(IDSharpness, self->sharpness);
 	glVertexAttrib1f(adjustments[IDContrast], self->contrast);
 	glVertexAttrib1f(adjustments[IDBrightness], self->brightness);
+	NSLog(@"fed brightness: %f, contrast: %f, and saturation: %f values", self->brightness, self->contrast, self->saturation);
 	
 	for(GLuint i = 0;i <  [self->storage width];i++
 		){
@@ -311,6 +312,8 @@ enum {
 	adjustments[IDContrast] = glGetAttribLocation(program, "myContrast");
 	adjustments[IDSharpness] = glGetAttribLocation(program, "mySharpness");
 	adjustments[IDSaturation] = glGetAttribLocation(program, "mySaturation");
+	adjustments[IDBrightness] = glGetAttribLocation(program, "myBrightness");
+	adjustments[IDHue] = glGetAttribLocation(program, "myHue");
 	
 	// Associate shader uniform variables with application space variables
 	uniforms[ProjectionViewModelUniformHandle	] = glGetUniformLocation(program, "myProjectionViewModelMatrix");
